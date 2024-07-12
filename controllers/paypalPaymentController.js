@@ -55,11 +55,64 @@ const createPayment = async (req, res) => {
             }
         });
 
-        // const createPayment = promisify(paypal.payment.create.bind(paypal.payment));
-        // const payment = await createPayment(createPaymentJson);
+       /*
+        // Promisify the PayPal payment creation method
+        const createPayment = promisify(paypal.payment.create.bind(paypal.payment));
+
+        // Create the payment
+        const payment = await createPayment(createPaymentJson);
+
+        // Save the payment details in the database
+        const newPayment = new PayPalPayment({
+            paymentId: payment.id,
+            payerId: payment.payer.payer_info.payer_id,
+            amount: amount,
+            currency: currency,
+            status: payment.state,
+        });
+
+        await newPayment.save();
+
+        res.json({ id: payment.id, links: payment.links });
+       * */
+
     } catch (error) {
         console.error('Error creating PayPal payment:', error);
         res.status(500).json({ error: error.message || 'Failed to create payment' });
+    }
+};
+
+
+const createPayment = async (req, res) => {
+    try {
+        const { amount, currency } = req.body;
+
+        if (!amount || !currency) {
+            return res.status(400).json({ error: 'amount and currency are required' });
+        }
+
+        const createPaymentJson = {
+            intent: 'sale',
+            payer: {
+                payment_method: 'paypal',
+            },
+            redirect_urls: {
+                return_url: 'http://return.url',
+                cancel_url: 'http://cancel.url',
+            },
+            transactions: [{
+                amount: {
+                    currency: currency,
+                    total: amount,
+                },
+                description: 'This is the payment description.',
+            }],
+        };
+
+
+    } catch (error) {
+        console.error('Error creating PayPal payment:', error.response ? error.response : error);
+        res.status(500).json({ error: error.response ? error.response.message : 'Failed to create payment' });
     }
 };
 
