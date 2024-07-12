@@ -1,14 +1,15 @@
 import paypal from 'paypal-rest-sdk';
+import {promisify} from 'util';
 import dotenv from 'dotenv';
 dotenv.config();
-
+import PayPalPaymentModel from "../models/paypalPaymentModel.js";
 paypal.configure({
     mode: process.env.PAYPAL_MODE,
     client_id: process.env.PAYPAL_CLIENT_ID,
     client_secret: process.env.PAYPAL_CLIENT_SECRET,
 });
 
-const createPayment = (req, res) => {
+const createPayment = async (req, res) => {
     try {
         const { amount, currency } = req.body;
 
@@ -34,19 +35,34 @@ const createPayment = (req, res) => {
             }],
         };
 
-        paypal.payment.create(createPaymentJson, (error, payment) => {
+        paypal.payment.create(createPaymentJson, async (error, payment) => {
             if (error) {
                 console.error('Error creating PayPal payment:', error.response ? error.response : error);
                 return res.status(500).json({ error: error.response ? error.response.message : 'Failed to create payment' });
             } else {
+                // Save the payment details in the database
+                const newPayment = new PayPalPaymentModel({
+                    paymentId: payment.id,
+                    //payerId: payment.payer.payer_info.payer_id,
+                    amount: amount,
+                    currency: currency,
+                    status: payment.state,
+                });
+
+                await newPayment.save();
+
                 res.json({ id: payment.id, links: payment.links });
             }
         });
+
+        // const createPayment = promisify(paypal.payment.create.bind(paypal.payment));
+        // const payment = await createPayment(createPaymentJson);
     } catch (error) {
         console.error('Error creating PayPal payment:', error);
         res.status(500).json({ error: error.message || 'Failed to create payment' });
     }
 };
+
 
 const executePayment = async (req, res) => {
     try {

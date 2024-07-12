@@ -25,6 +25,6 @@ const PaymentSchema = new mongoose.Schema({
     }
 });
 
-const PayPalPayment = mongoose.model('PayPalPayment', PaymentSchema);
+const PayPalPaymentModel = mongoose.model('PayPalPayment', PaymentSchema);
 
-export default PayPalPayment;
+export default PayPalPaymentModel;
