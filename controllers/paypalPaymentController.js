@@ -23,8 +23,8 @@ const createPayment = async (req, res) => {
                 payment_method: "paypal",
             },
             redirect_urls: {
-                return_url: "http://return.url",
-                cancel_url: "http://cancel.url",
+                return_url: "http://localhost:4009/api/success",
+                cancel_url: "http://localhost:4009/api/cancel",
             },
             transactions: [
                 {
@@ -44,9 +44,10 @@ const createPayment = async (req, res) => {
         const payment = await createPayment(createPaymentJson);
 
         // Save the payment details in the database
-        const newPayment = new PayPalPayment({
+        const newPayment = new PayPalPaymentModel({
             paymentId: payment.id,
-            payerId: payment.payer.payer_info.payer_id,
+           // payerId: payment.payer.payer_info.payer_id,
+            payerId : null,
             amount: amount,
             currency: currency,
             status: payment.state,
@@ -96,36 +97,22 @@ const executePayment = async (req, res) => {
         }
 
         const executePaymentJson = {
-            payerId: payerId,
+            payer_id: payerId,
         };
 
-        const payment = await new Promise((resolve, reject) => {
-            paypal.payment.execute(paymentId, executePaymentJson, (error, payment) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(payment);
-                }
-            });
-        });
+        const executePayment = promisify(paypal.payment.execute.bind(paypal.payment));
+        const payment = await executePayment(paymentId, executePaymentJson);
 
-        if (!payment.id || !payment.payer.payerInfo.payerId || !payment.transactions[0].amount.total || !payment.transactions[0].amount.currency || !payment.state) {
-            return res.status(400).json({ error: 'Incomplete PayPal payment data' });
-        }
+        // Update the payment details in the database
+        await PayPalPaymentModel.findOneAndUpdate(
+              { paymentId: payment.id },
+            { payerId: payment.payer.payer_info.payer_id, status: payment.state }
+        );
 
-        const newPayment = new PayPalPayment({
-            paymentId: payment.id,
-            payerId: payment.payer.payerInfo.payerId,
-            amount: payment.transactions[0].amount.total,
-            currency: payment.transactions[0].amount.currency,
-            status: payment.state,
-        });
-
-        await newPayment.save();
-        res.json(payment);
+        res.json({ success: true, payment });
     } catch (error) {
-        console.error('Error executing PayPal payment:', error);
-        res.status(500).json({ error: error.message || 'Failed to execute payment' });
+        console.error('Error executing PayPal payment:', error.response ? error.response : error);
+        res.status(500).json({ error: error.response ? error.response.message : 'Failed to execute payment' });
     }
 };
 
