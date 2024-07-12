@@ -1,5 +1,13 @@
 import paypal from 'paypal-rest-sdk';
 import PayPalPayment from '../models/paypalPaymentModel.js';
+import dotenv from 'dotenv';
+dotenv.config();
+
+paypal.configure({
+    mode: process.env.PAYPAL_MODE,
+    client_id : process.env.PAYPAL_CLIENT_ID,
+    client_secret: process.env.PAYPAL_CLIENT_SECRET,
+})
 
 const createPayment = async (req, res) => {
     try {
