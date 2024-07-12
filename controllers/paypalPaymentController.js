@@ -1,8 +1,9 @@
 import paypal from 'paypal-rest-sdk';
+import PayPalPaymentModel from "../models/paypalPaymentModel.js";
 import {promisify} from 'util';
 import dotenv from 'dotenv';
 dotenv.config();
-import PayPalPaymentModel from "../models/paypalPaymentModel.js";
+
 paypal.configure({
     mode: process.env.PAYPAL_MODE,
     client_id: process.env.PAYPAL_CLIENT_ID,
@@ -15,6 +16,12 @@ const createPayment = async (req, res) => {
 
         if (!amount || !currency) {
             return res.status(400).json({ error: "amount and currency are required" });
+        }
+
+        // Validate the currency
+        const supportedCurrencies = ['INR', 'USD'];
+        if (!supportedCurrencies.includes(currency)) {
+            return res.status(400).json({ error: 'Currency not supported' });
         }
 
         const createPaymentJson = {
@@ -46,8 +53,8 @@ const createPayment = async (req, res) => {
         // Save the payment details in the database
         const newPayment = new PayPalPaymentModel({
             paymentId: payment.id,
-           // payerId: payment.payer.payer_info.payer_id,
-            payerId : null,
+            // payerId: payment.payer.payer_info.payer_id,
+            payerId: null,
             amount: amount,
             currency: currency,
             status: payment.state,
@@ -90,7 +97,7 @@ const createPayment = async (req, res) => {
 
 const executePayment = async (req, res) => {
     try {
-        const { paymentId, payerId } = req.body;
+        const { paymentId, payerId } = req.query;
 
         if (!paymentId || !payerId) {
             return res.status(400).json({ error: 'paymentId and payerId are required' });
@@ -106,7 +113,7 @@ const executePayment = async (req, res) => {
         // Update the payment details in the database
         await PayPalPaymentModel.findOneAndUpdate(
               { paymentId: payment.id },
-            { payerId: payment.payer.payer_info.payer_id, status: payment.state }
+            { payerId: payerId, status: payment.state }
         );
 
         res.json({ success: true, payment });
