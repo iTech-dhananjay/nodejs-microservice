@@ -12,6 +12,7 @@ paypal.configure({
 
 const createPayment = async (req, res) => {
     try {
+        //
         const { amount, currency } = req.body;
 
         if (!amount || !currency) {

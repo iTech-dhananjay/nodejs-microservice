@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import paymentGatewayModule from './modules/payment-gateway/index.js';
+import videoStreamingModule from "./modules/video-stream/index.js";
 
 const app = express();
 
@@ -9,8 +10,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Initialize the module with the app instance
+// Initialize the modules with the app instance
 paymentGatewayModule.init(app);
+videoStreamingModule.init(app);
+
 
 // Route to get the API key
 app.get('/api/getkey', (req, res) => {
