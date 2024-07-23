@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import paymentGatewayModule from './modules/payment-gateway/index.js';
-import { logInfo } from './utils/logger.js';
 
 const app = express();
 

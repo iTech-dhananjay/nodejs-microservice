@@ -46,8 +46,14 @@ const logMongoDB = (message) => {
     logger.info(coloredMessage); // Use the 'info' level for MongoDB logs, with custom coloring
 };
 
+const logServer = (message) => {
+    const coloredMessage = chalk.cyan(message);
+    logger.info(coloredMessage);
+
+}
+
 const logInfo = (message) => logger.info(message);
 const logError = (message) => logger.error(message);
 const logWarn = (message) => logger.warn(message);
 
-export { logInfo, logError, logWarn, logMongoDB };
+export { logInfo, logError, logWarn, logMongoDB, logServer };
