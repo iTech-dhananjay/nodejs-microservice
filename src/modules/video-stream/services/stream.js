@@ -1,8 +1,8 @@
 import path from 'path';
 import fs from 'fs';
-import Video from '../models/videoStream.js';
 import { logError } from '../../../utils/logger.js';
 import VideoModel from "../models/videoStream.js";
+
 
 const saveVideo = async (file) => {
     const video = new VideoModel({
@@ -21,6 +21,7 @@ export const getVideoById = async (id) => {
 
 const uploadVideo = async (req, res) => {
     try {
+        console.log(req.file,'rre.file')
         const video = await saveVideo(req.file);
         res.status(201).json(video);
     } catch (error) {
