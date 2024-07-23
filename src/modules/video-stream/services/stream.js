@@ -1,10 +1,10 @@
 import path from 'path';
 import fs from 'fs';
 import { logError } from '../../../utils/logger.js';
-import VideoModel from "../models/videoStream.js";
+import VideoModel from "../models/video.js";
 
 
-const saveVideo = async (file) => {
+const addVideo = async (file) => {
     const video = new VideoModel({
         originalName: file.originalname,
         filename: file.filename,
@@ -19,15 +19,6 @@ export const getVideoById = async (id) => {
     return await VideoModel.findById(id);
 };
 
-const uploadVideo = async (req, res) => {
-    try {
-        const video = await saveVideo(req.file);
-        res.status(201).json(video);
-    } catch (error) {
-        logError(`Error uploading video: ${error.message}`);
-        res.status(500).send('Error uploading video');
-    }
-};
 
 const streamVideo = async (req, res) => {
     try {
@@ -76,4 +67,7 @@ const streamVideo = async (req, res) => {
     }
 };
 
-export { uploadVideo, streamVideo }
+export const videoStreamService = {
+    addVideo,
+    streamVideo
+}

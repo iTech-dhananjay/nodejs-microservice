@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { streamVideo }  from '../services/stream.js';
+import { videoStreamService } from '../services/stream.js';
 
 const router = Router();
 
 router.get('/:id', async (req, res) => {
     try {
-        await streamVideo(req, res);
+        await videoStreamService.streamVideo(req, res);
     } catch (error) {
         res.status(500).send('Error streaming video');
     }

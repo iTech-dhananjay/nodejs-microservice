@@ -1,17 +1,17 @@
-// routes/videoRouter.js
 import { Router } from 'express';
-import { uploadVideo } from '../services/stream.js';
-import upload from '../../../config/multerFile.js'; // Adjust the path as necessary
+import { videoStreamService } from "../services/stream.js";
+import upload from '../../../config/fileUpload.js';
 
 const router = Router();
 
 router.post('/', upload.single('video'), async (req, res) => {
-    if (!req.file) {
-        return res.status(400).send('No file uploaded.');
-    }
-
     try {
-        await uploadVideo(req, res);
+        const file = req.file
+        if (!file) {
+            return res.status(400).send('No file uploaded.');
+        }
+        const video = await videoStreamService.addVideo(file);
+        res.status(201).json(video);
     } catch (error) {
         res.status(500).send('Error uploading video');
     }
