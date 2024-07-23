@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import app from './app.js';
 import { connectDB } from './config/database.js';
+import { logInfo } from './utils/logger.js';
 // import Razorpay from 'razorpay';
 
 // Load environment variables
@@ -15,7 +16,7 @@ connectDB();
 //   key_secret: process.env.RAZORPAY_API_SECRET,
 // });
 
+
 // Start the server
-app.listen(process.env.PORT, () =>
-    console.log(`Server is running on port ${process.env.PORT}`)
-);
+const PORT = process.env.PORT || 4009;
+app.listen(PORT, () => logInfo(`Server is running on port ${PORT}`));

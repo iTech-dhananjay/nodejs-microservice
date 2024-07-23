@@ -1,8 +1,7 @@
-// modules/payment-gateway/index.js
 import { Router } from 'express';
 import payPalRouter from './router/payPal.js';
 import razorPayRouter from './router/razorPay.js';
-import logger from '../../utils/logger.js';
+import { logInfo, logError } from '../../utils/logger.js'; // Import specific log functions
 
 // Create a router instance
 const router = Router();
@@ -14,8 +13,12 @@ router.use('/razorpay', razorPayRouter);
 // Export the module with an init method
 const paymentGatewayModule = {
     init: (app) => {
-        app.use('/payment-gateway', router);
-        logger.info('Payment Gateway Module initialized');
+        try {
+            app.use('/payment-gateway', router);
+            logInfo('Payment Gateway Module initialized successfully');
+        } catch (error) {
+            logError(`Failed to initialize Payment Gateway Module: ${error.message}`);
+        }
     },
 };
 
