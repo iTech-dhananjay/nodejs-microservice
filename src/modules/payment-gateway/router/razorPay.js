@@ -2,7 +2,7 @@ import express from "express";
 import {
   checkout,
   paymentVerification,
-} from "../controllers/paymentController.js";
+} from "../services/razorPay.js";
 
 const router = express.Router();
 

@@ -1,5 +1,3 @@
-// models/paypalPaymentModel.js
-
 import mongoose from 'mongoose';
 
 const PaymentSchema = new mongoose.Schema({
@@ -25,6 +23,6 @@ const PaymentSchema = new mongoose.Schema({
     }
 });
 
-const PayPalPaymentModel = mongoose.model('PayPalPayment', PaymentSchema);
+const PayPal = mongoose.model('PayPalPayment', PaymentSchema);
 
-export default PayPalPaymentModel;
+export default PayPal;

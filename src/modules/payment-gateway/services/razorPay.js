@@ -1,6 +1,6 @@
 // import { instance } from "../server.js";
 import crypto from "crypto";
-import { Payment } from "../models/paymentModel.js";
+import { RazorPayPayment } from "../models/razorPay.js";
 
 export const checkout = async (req, res) => {
   const options = {
@@ -31,7 +31,7 @@ export const paymentVerification = async (req, res) => {
   if (isAuthentic) {
     // Database comes here
 
-    await Payment.create({
+    await RazorPayPayment.create({
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,

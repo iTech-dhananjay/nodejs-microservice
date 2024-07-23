@@ -1,5 +1,5 @@
 import paypal from 'paypal-rest-sdk';
-import PayPalPaymentModel from "../models/paypalPaymentModel.js";
+import PayPal from "../models/payPal.js";
 import {promisify} from 'util';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -51,7 +51,7 @@ const createPayment = async (req, res) => {
         const payment = await createPayment(createPaymentJson);
 
         // Save the payment details in the database
-        const newPayment = new PayPalPaymentModel({
+        const newPayment = new PayPal({
             paymentId: payment.id,
             // payerId: payment.payer.payer_info.payer_id,
             payerId: null,
@@ -72,7 +72,7 @@ const createPayment = async (req, res) => {
                 return res.status(500).json({ error: error.response ? error.response.message : 'Failed to create payment' });
             } else {
                 // Save the payment details in the database
-                const newPayment = new PayPalPaymentModel({
+                const newPayment = new PayPal({
                     paymentId: payment.id,
                     //payerId: payment.payer.payer_info.payer_id,
                     amount: amount,
@@ -111,7 +111,7 @@ const executePayment = async (req, res) => {
         const payment = await executePayment(paymentId, executePaymentJson);
 
         // Update the payment details in the database
-        await PayPalPaymentModel.findOneAndUpdate(
+        await PayPal.findOneAndUpdate(
               { paymentId: payment.id },
             { payerId: payerId, status: payment.state }
         );

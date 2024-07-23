@@ -1,7 +1,7 @@
-// routes/paymentRoutes.js
+// router/razorPay.js
 import { Router } from 'express';
 const router = Router();
-import { createPayment, executePayment } from '../controllers/paypalPaymentController.js'
+import { createPayment, executePayment } from '../services/payPal.js'
 import paypal from 'paypal-rest-sdk';
 
 
