@@ -1,25 +1,6 @@
 import winston from 'winston';
 import chalk from 'chalk';
 
-// Define custom log levels and their colors
-const customLevels = {
-    levels: {
-        error: 0,
-        warn: 1,
-        info: 2,
-        mongodb: 3, // Custom level for MongoDB
-    },
-    colors: {
-        error: 'red',
-        warn: 'yellow',
-        info: 'blue',
-        mongodb: 'green', // Custom color for MongoDB
-    },
-};
-
-// Add custom colors to winston
-winston.addColors(customLevels.colors);
-
 // Create a custom format that uses chalk for coloring
 const customFormat = winston.format.printf(({ level, message, timestamp }) => {
     let coloredMessage = message;
@@ -39,13 +20,9 @@ const customFormat = winston.format.printf(({ level, message, timestamp }) => {
             coloredMessage = chalk.blue(message);
             coloredLevel = chalk.blue.bold(level.toUpperCase());
             break;
-        case 'mongodb':
-            coloredMessage = chalk.green(message);
-            coloredLevel = chalk.green.bold(level.toUpperCase());
-            break;
         default:
             coloredMessage = message;
-            coloredLevel = level.toUpperCase();
+            coloredLevel = chalk.white.bold(level.toUpperCase());
     }
 
     return `${coloredTimestamp} [${coloredLevel}]: ${coloredMessage}`;
@@ -53,7 +30,7 @@ const customFormat = winston.format.printf(({ level, message, timestamp }) => {
 
 // Configure winston logger
 const logger = winston.createLogger({
-    levels: customLevels.levels,
+    level: 'info', // Default logging level
     format: winston.format.combine(
         winston.format.timestamp(),
         customFormat
@@ -63,9 +40,14 @@ const logger = winston.createLogger({
     ],
 });
 
+// Custom log function for MongoDB logs
+const logMongoDB = (message) => {
+    const coloredMessage = chalk.magenta(message);
+    logger.info(coloredMessage); // Use the 'info' level for MongoDB logs, with custom coloring
+};
+
 const logInfo = (message) => logger.info(message);
 const logError = (message) => logger.error(message);
 const logWarn = (message) => logger.warn(message);
-const logMongoDB = (message) => logger.log('mongodb', message);  // Custom log level for MongoDB
 
 export { logInfo, logError, logWarn, logMongoDB };
