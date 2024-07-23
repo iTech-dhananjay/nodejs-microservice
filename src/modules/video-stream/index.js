@@ -10,7 +10,7 @@ router.use('/upload', uploadRouter);
 
 const videoStreamingModule = {
     init: (app) => {
-        app.use('/api/video', router);
+        app.use('/video-stream', router);
         logInfo('Video Streaming Module loaded');
     },
 };

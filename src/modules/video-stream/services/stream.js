@@ -4,7 +4,7 @@ import Video from '../models/videoStream.js';
 import { logError } from '../../../utils/logger.js';
 import VideoModel from "../models/videoStream.js";
 
-export const saveVideo = async (file) => {
+const saveVideo = async (file) => {
     const video = new VideoModel({
         originalName: file.originalname,
         filename: file.filename,
@@ -19,7 +19,7 @@ export const getVideoById = async (id) => {
     return await VideoModel.findById(id);
 };
 
-export const uploadVideo = async (req, res) => {
+const uploadVideo = async (req, res) => {
     try {
         const video = await saveVideo(req.file);
         res.status(201).json(video);
@@ -29,7 +29,7 @@ export const uploadVideo = async (req, res) => {
     }
 };
 
-export const streamVideo = async (req, res) => {
+const streamVideo = async (req, res) => {
     try {
         const video = await getVideoById(req.params.id);
         if (!video) {
@@ -75,3 +75,5 @@ export const streamVideo = async (req, res) => {
         res.status(500).send('Error streaming video');
     }
 };
+
+export { uploadVideo, streamVideo }
