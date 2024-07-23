@@ -1,8 +1,17 @@
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import { logMongoDB, logError, logInfo } from '../utils/logger.js';
+
 dotenv.config();
 
-export const connectDB = async () => {
-  const { connection } = await mongoose.connect(process.env.MONGO_URI);
-  console.log(`Mongodb is connected with ${connection.host}`);
+const connectToDatabase = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    logMongoDB('MongoDB is connected'); // Custom logger for MongoDB
+  } catch (error) {
+    logError(`MongoDB connection error: ${error.message}`); // Use error logger
+  }
 };
+
+export default connectToDatabase;
