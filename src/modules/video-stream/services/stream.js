@@ -21,7 +21,6 @@ export const getVideoById = async (id) => {
 
 const uploadVideo = async (req, res) => {
     try {
-        console.log(req.file,'rre.file')
         const video = await saveVideo(req.file);
         res.status(201).json(video);
     } catch (error) {
