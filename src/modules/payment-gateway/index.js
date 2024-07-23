@@ -3,14 +3,11 @@ import payPalRouter from './router/payPal.js';
 import razorPayRouter from './router/razorPay.js';
 import winston from 'winston';
 
-// Create a router instance
 const router = Router();
 
-// Use the imported routers
 router.use('/paypal', payPalRouter);
 router.use('/razorpay', razorPayRouter);
 
-// Configure winston logger
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
@@ -19,7 +16,6 @@ const logger = winston.createLogger({
     ],
 });
 
-// Export the module with an init method
 const paymentGatewayModule = {
     init: (app) => {
         app.use('/api/payment-gateway', router);

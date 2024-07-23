@@ -9,10 +9,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 // Initialize the module with the app instance
 paymentGatewayModule.init(app);
-
 
 // Route to get the API key
 app.get('/api/getkey', (req, res) => {
