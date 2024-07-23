@@ -1,16 +1,20 @@
 import express from 'express';
 import cors from 'cors';
-import paymentGatewayRouter from './modules/payment-gateway/index.js'; // Updated import
+import paymentGatewayModule from './modules/payment-gateway/index.js';
 
 const app = express();
 
+// Middleware setup
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Use the paymentGatewayRouter
-app.use('/api/payment-gateway', paymentGatewayRouter);
 
+// Initialize the module with the app instance
+paymentGatewayModule.init(app);
+
+
+// Route to get the API key
 app.get('/api/getkey', (req, res) => {
     const apiKey = process.env.RAZORPAY_API_KEY;
     if (apiKey) {
