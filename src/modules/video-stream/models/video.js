@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const videoSchema = new mongoose.Schema({
     originalName: { type: String, required: true },
@@ -9,6 +9,6 @@ const videoSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
 });
 
-const VideoModel = mongoose.model('Video', videoSchema);
+const VideoModel = mongoose.model("Video", videoSchema);
 
 export default VideoModel;
