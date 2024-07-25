@@ -1,16 +1,18 @@
 import { Router } from 'express';
-import streamRouter from './router/stream.js';
+import videoRouter from './router/video.js';
 import uploadRouter from './router/upload.js';
+import imageRouter from './router/image.js';
 import { logInfo } from '../../utils/logger.js';
 
 const router = Router();
 
-router.use('/stream', streamRouter);
+router.use('/video', videoRouter);
 router.use('/upload', uploadRouter);
+router.use('/image', imageRouter)
 
 const videoStreamingModule = {
     init: (app) => {
-        app.use('/video-stream', router);
+        app.use('/video-image-stream', router);
         logInfo('Video Streaming Module loaded');
     },
 };

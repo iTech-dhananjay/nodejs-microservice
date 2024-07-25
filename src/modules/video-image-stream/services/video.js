@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { logError } from '../../../utils/logger.js';
-import VideoModel from "../models/video.js";
+import VideoModel from "../models/stream.js";
 
 
 const addVideo = async (file) => {

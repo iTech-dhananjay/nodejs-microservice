@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { videoStreamService } from "../services/stream.js";
+import { videoStreamService } from "../services/video.js";
 import upload from '../../../config/fileUpload.js';
 
 const router = Router();

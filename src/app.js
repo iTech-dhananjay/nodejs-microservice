@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import paymentGatewayModule from './modules/payment-gateway/index.js';
-import videoStreamingModule from "./modules/video-stream/index.js";
+import videoStreamingModule from "./modules/video-image-stream/index.js";
 
 const app = express();
 
