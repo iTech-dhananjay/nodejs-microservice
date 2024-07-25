@@ -26,46 +26,6 @@ router.get('/video', async (req, res) => {
 */
 
 
-
-// router.get('/video', (req, res) => {
-//     const filePath = path.resolve(_dirname, '../../../../public/uploads/1721739712029-video.mp4');
-//
-//     fs.stat(filePath, (err, stat) => {
-//         if (err) {
-//             return res.status(404).send('Video file not found.');
-//         }
-//
-//         const fileSize = stat.size;
-//         const range = req.headers.range;
-//
-//         if (!range) {
-//             return res.status(416).send('Requires a range header.');
-//         }
-//
-//         const chunkSize = 10 ** 6; // 1MB
-//         const start = Number(range.replace(/\D/g, ""));
-//         const end = Math.min(start + chunkSize - 1, fileSize - 1);
-//
-//         const contentLength = end - start + 1;
-//         const headers = {
-//             "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-//             "Accept-Ranges": "bytes",
-//             "Content-Length": contentLength,
-//             "Content-Type": "video/mp4",
-//         };
-//
-//         res.writeHead(206, headers);
-//
-//         const fileStream = fs.createReadStream(filePath, { start, end });
-//         fileStream.on('open', () => {
-//             fileStream.pipe(res);
-//         });
-//         fileStream.on('error', (streamErr) => {
-//             res.end(streamErr);
-//         });
-//     });
-// });
-
 //To display the byte ranges in megabytes (MB) in the logs
 router.get('/video', (req, res) => {
     const filePath = path.resolve(_dirname, '../../../../public/uploads/1721739712029-video.mp4');  // Resolve the path to the video file
