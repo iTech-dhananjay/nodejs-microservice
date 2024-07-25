@@ -69,4 +69,17 @@ router.post('/upload-chunk', upload.array('chunk'), async (req, res) => {
     }
 });
 
+router.get('/image-list', async (req, res) => {
+    try{
+        const images = await imageService.getAllImages()
+
+        res.status(200).json({
+            msg: 'Images found',
+            images,
+        });
+    }catch(error){
+         res.status(500).send('Error getting images');
+    }
+})
+
 export default router;

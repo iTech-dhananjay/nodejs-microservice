@@ -1,6 +1,6 @@
 import ImageModel from '../models/image.js'; // Adjust the path as needed
 
-export const saveFileDetails = async (fileData) => {
+const saveFileDetails = async (fileData) => {
     try {
         const { filename, filePath, fileSize, mimeType } = fileData;
         const newImage = new ImageModel({
@@ -16,7 +16,17 @@ export const saveFileDetails = async (fileData) => {
     }
 };
 
+const getAllImages = async() =>{
+    try {
+        const documents = await ImageModel.find();
+        return documents;
+    }catch (error) {
+        throw error;
+    }
+}
+
 
 export const imageService = {
-    saveFileDetails
+    saveFileDetails,
+    getAllImages
 }
