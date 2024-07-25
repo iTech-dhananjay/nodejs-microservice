@@ -6,6 +6,13 @@ import {imageService} from '../services/image.js'; // Ensure this path is correc
 
 const router = Router();
 
+import { promisify } from 'util';
+import { createWriteStream, stat, readFile, unlink } from 'fs';
+
+const statAsync = promisify(stat);
+const readFileAsync = promisify(readFile);
+const unlinkAsync = promisify(unlink);
+
 router.post('/upload-chunk', upload.array('chunk'), async (req, res) => {
     const { originalname, chunkIndex, totalChunks } = req.body;
     const chunks = req.files;
@@ -18,10 +25,10 @@ router.post('/upload-chunk', upload.array('chunk'), async (req, res) => {
 
     try {
         // Move chunks to their respective locations
-        chunks.forEach((chunk, index) => {
+        await Promise.all(chunks.map(async (chunk, index) => {
             const tempFilePath = `${filePath}.part${chunkIndex[index]}`;
-            fs.renameSync(chunk.path, tempFilePath);
-        });
+            await promisify(fs.rename)(chunk.path, tempFilePath);
+        }));
 
         // Check if all chunks are uploaded
         const allChunksUploaded = [...Array(parseInt(totalChunks)).keys()].every((index) => {
@@ -30,19 +37,19 @@ router.post('/upload-chunk', upload.array('chunk'), async (req, res) => {
 
         if (allChunksUploaded) {
             // Merge chunks into a single file
-            const writeStream = fs.createWriteStream(filePath);
+            const writeStream = createWriteStream(filePath);
 
             for (let index = 0; index < totalChunks; index++) {
                 const chunkPath = `${filePath}.part${index}`;
-                const data = fs.readFileSync(chunkPath);
+                const data = await readFileAsync(chunkPath);
                 writeStream.write(data);
-                fs.unlinkSync(chunkPath); // Remove chunk after merging
+                await unlinkAsync(chunkPath); // Remove chunk after merging
             }
 
             writeStream.end();
 
             // Save file details to the database
-            const fileSize = fs.statSync(filePath).size;
+            const fileSize = (await statAsync(filePath)).size;
             const mimeType = 'image/png'; // Adjust based on actual file type
 
             await imageService.saveFileDetails({
