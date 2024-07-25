@@ -5,18 +5,20 @@ import { upload, uploadDir } from '../../../config/fileUpload.js';
 
 const router = Router();
 
-router.post('/upload-chunk', upload.single('chunk'), (req, res) => {
+router.post('/upload-chunk', upload.array('chunk'), (req, res) => {
     const { originalname, chunkIndex, totalChunks } = req.body;
-    const chunk = req.file;
+    const chunks = req.files;
 
-    if (!originalname || !chunkIndex || !totalChunks) {
-        return res.status(400).send('Missing required fields');
+    if (!originalname || !chunkIndex || !totalChunks || !chunks || chunks.length === 0) {
+        return res.status(400).send('Missing required fields or files');
     }
 
     const filePath = path.join(uploadDir, originalname);
-    const tempFilePath = `${filePath}.part${chunkIndex}`;
 
-    fs.renameSync(chunk.path, tempFilePath);
+    chunks.forEach((chunk, index) => {
+        const tempFilePath = `${filePath}.part${chunkIndex[index]}`;
+        fs.renameSync(chunk.path, tempFilePath);
+    });
 
     // Check if all chunks are uploaded
     const allChunksUploaded = [...Array(parseInt(totalChunks)).keys()].every((index) => {
