@@ -28,7 +28,7 @@ router.get('/video', async (req, res) => {
 
 //To display the byte ranges in megabytes (MB) in the logs
 router.get('/play', (req, res) => {
-    const filePath = path.resolve(_dirname, '../../../../public/uploads/1721739712029-video.mp4');  // Resolve the path to the video file
+    const filePath = path.resolve(_dirname, '../../../../public/uploads/video.mp4');  // Resolve the path to the video file
 
     // Get file statistics to obtain file size
     fs.stat(filePath, (err, stat) => {
