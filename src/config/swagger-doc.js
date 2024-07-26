@@ -15,6 +15,13 @@ const options = {
             },
         ],
         components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+            },
             schemas: {
                 Product: {
                     type: 'object',
@@ -110,6 +117,11 @@ const options = {
                 post: {
                     tags: ['Product'],
                     summary: 'Create a new product',
+                    security: [
+                        {
+                            bearerAuth: [],
+                        },
+                    ],
                     requestBody: {
                         required: true,
                         content: {
@@ -123,13 +135,9 @@ const options = {
                     responses: {
                         201: {
                             description: 'Product created successfully',
-                            content: {
-                                'application/json': {
-                                    schema: {
-                                        $ref: '#/components/schemas/Product',
-                                    },
-                                },
-                            },
+                        },
+                        401: {
+                            description: 'Unauthorized. Token missing.',
                         },
                     },
                 },

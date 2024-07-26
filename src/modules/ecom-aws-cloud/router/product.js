@@ -4,7 +4,7 @@ import isLoggedInAndAdmin from '../../../middleware/checkAdminRole.js';
 
 const router = Router();
 
-router.post('/add', async (req, res) => {
+router.post('/add', isLoggedInAndAdmin, async (req, res) => {
      try {
           const { name, price, availableStock } = req.body;
 
