@@ -2,6 +2,7 @@ import { Router } from 'express';
 import userRouter from './router/user.js';
 import productRouter from './router/product.js';
 import orderRouter from './router/order.js';
+import warehouseRouter from './router/warehouse.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
 // Create a router instance
@@ -11,6 +12,7 @@ const router = Router();
 router.use('/user', userRouter);
 router.use('/product', productRouter);
 router.use('/order', orderRouter);
+router.use('/warehouse', warehouseRouter)
 
 // Export the module with an init method
 const EcomModule = {

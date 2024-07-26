@@ -5,7 +5,7 @@ const warehouseSchema = new mongoose.Schema({
      location: String,
      products: [
           {
-               product: {
+               productId: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'Product',
                },

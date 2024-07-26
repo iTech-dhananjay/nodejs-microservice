@@ -13,7 +13,6 @@ const isLoggedInAndAdmin = (req, res, next) => {
           const token = tokens.split(' ')[1];
 
           const decodedToken = jwt.verify(token, process.env.JWT_KEY);
-          console.log('decodedToken', decodedToken);
 
           if (decodedToken.role === 'admin') {
                req.user = decodedToken; // Attach the decoded token to the request object
