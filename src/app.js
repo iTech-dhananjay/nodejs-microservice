@@ -4,6 +4,7 @@ import paymentGatewayModule from './modules/payment-gateway/index.js';
 import videoStreamingModule from "./modules/video-image-stream/index.js";
 import ecomModule from "./modules/ecom-aws-cloud/index.js";
 import setupSwagger from "./config/swagger-doc.js";
+import setupSwaggerReplica from "./config/replica-swagger-doc.js";
 const app = express();
 
 // Use Swagger UI
@@ -12,6 +13,7 @@ const app = express();
 
 // Setup Swagger
 setupSwagger(app);
+setupSwaggerReplica(app);
 
 // Middleware setup
 app.use(cors());
