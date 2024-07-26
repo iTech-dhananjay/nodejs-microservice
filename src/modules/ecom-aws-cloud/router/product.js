@@ -4,9 +4,21 @@ import isLoggedInAndAdmin from '../../../middleware/checkAdminRole.js';
 
 const router = Router();
 
-router.post('/add', isLoggedInAndAdmin, async (req, res) => {
+router.post('/add', async (req, res) => {
      try {
-          const newProduct = await productService.createProduct(req.body);
+          const { name, price, availableStock } = req.body;
+
+          if (!name || typeof price !== 'number' || typeof availableStock !== 'number') {
+               return res.status(400).json({ error: 'Invalid input' });
+          }
+
+          const productData = {
+               name,
+               price,
+               availableStock,
+          };
+
+          const newProduct = await productService.createProduct(productData);
           res.status(201).json(newProduct);
      } catch (error) {
           res.status(400).json({ message: error.message });

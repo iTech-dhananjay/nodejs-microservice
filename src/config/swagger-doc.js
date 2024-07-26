@@ -18,12 +18,8 @@ const options = {
             schemas: {
                 Product: {
                     type: 'object',
-                    required: ['name', 'price'],
+                    required: ['name', 'price', 'availableStock'],
                     properties: {
-                        id: {
-                            type: 'string',
-                            description: 'The auto-generated id of the product',
-                        },
                         name: {
                             type: 'string',
                             description: 'The name of the product',
@@ -32,11 +28,15 @@ const options = {
                             type: 'number',
                             description: 'The price of the product',
                         },
+                        availableStock: {
+                            type: 'number',
+                            description: 'The available stock of the product',
+                        },
                     },
                     example: {
-                        id: 'd5fE_asz',
                         name: 'Sample Product',
                         price: 9.99,
+                        availableStock: 100,
                     },
                 },
                 Order: {
@@ -106,6 +106,34 @@ const options = {
             },
         },
         paths: {
+            '/ecom/product/add': {
+                post: {
+                    tags: ['Product'],
+                    summary: 'Create a new product',
+                    requestBody: {
+                        required: true,
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/Product',
+                                },
+                            },
+                        },
+                    },
+                    responses: {
+                        201: {
+                            description: 'Product created successfully',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/Product',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
             '/ecom/product/list': {
                 get: {
                     tags: ['Product'],
