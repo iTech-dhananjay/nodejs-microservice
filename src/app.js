@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import paymentGatewayModule from './modules/payment-gateway/index.js';
 import videoStreamingModule from "./modules/video-image-stream/index.js";
+import ecomModule from "./modules/ecom-aws-cloud/index.js";
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 // Initialize the modules with the app instance
 paymentGatewayModule.init(app);
 videoStreamingModule.init(app);
+ecomModule.init(app);
 
 
 // Route to get the API key
