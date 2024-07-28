@@ -100,6 +100,56 @@ const warehouseSchemas = {
     },
 };
 
+const paymentSchemas = {
+    Payment: {
+        type: 'object',
+        required: ['amount', 'currency', 'paymentIntentId', 'status'],
+        properties: {
+            id: {
+                type: 'string',
+                description: 'The auto-generated id of the payment',
+            },
+            amount: {
+                type: 'number',
+                description: 'The amount of the payment',
+            },
+            currency: {
+                type: 'string',
+                description: 'The currency of the payment',
+            },
+            paymentIntentId: {
+                type: 'string',
+                description: 'The Stripe payment intent ID',
+            },
+            productId: {
+                type: 'string',
+                description: 'The ID of the product',
+            },
+            userId: {
+                type: 'string',
+                description: 'The ID of the user',
+            },
+            status: {
+                type: 'string',
+                description: 'The status of the payment',
+            },
+            createdAt: {
+                type: 'string',
+                format: 'date-time',
+                description: 'The date and time when the payment was created',
+            },
+        },
+        example: {
+            id: 'd5fE_asz',
+            amount: 5000,
+            currency: 'usd',
+            paymentIntentId: 'pi_1JY7X02eZvKYlo2C0hI8vBfF',
+            status: 'succeeded',
+            createdAt: '2023-07-28T12:34:56Z',
+        },
+    }
+}
+
 const productPaths = {
     '/ecom/product/add': {
         post: {
@@ -225,6 +275,45 @@ const warehousePaths = {
     },
 };
 
+const paymentPaths = {
+    '/ecom/stripe-payment/create-payment-intent': {
+        post: {
+            tags: ['Payment'],
+            summary: 'Create a payment intent',
+            requestBody: {
+                content: {
+                    'application/json': {
+                        schema: {
+                            $ref: '#/components/schemas/PaymentIntent',
+                        },
+                    },
+                },
+            },
+            responses: {
+                200: {
+                    description: 'Payment intent created',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    clientSecret: {
+                                        type: 'string',
+                                        description: 'The client secret for the payment intent',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                500: {
+                    description: 'Internal server error',
+                },
+            },
+        },
+    }
+}
+
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -251,6 +340,7 @@ const options = {
                 ...orderSchemas,
                 ...userSchemas,
                 ...warehouseSchemas,
+                ...paymentSchemas
             },
         },
         paths: {
@@ -258,6 +348,7 @@ const options = {
             ...orderPaths,
             ...userPaths,
             ...warehousePaths,
+            ...paymentPaths,
         },
     },
     apis: [],
