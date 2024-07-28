@@ -1,6 +1,6 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import {logServer} from "../utils/logger.js";
+import {logWarn} from "../utils/logger.js";
 
 const productSchemas = {
     Product: {
@@ -359,7 +359,7 @@ const swaggerSpec = swaggerJSDoc(options);
 
 const setupSwaggerReplica = (app) => {
     app.use('/api-docs-replica', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-    logServer('Swagger Replica API documentation is set up at http://localhost:4009/api-docs-replica');
+    logWarn('Swagger API documentation is set up at http://localhost:4009/api-docs-replica');
 };
 
 export default setupSwaggerReplica;
