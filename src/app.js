@@ -3,6 +3,7 @@ import cors from 'cors';
 import paymentGatewayModule from './modules/payment-gateway/index.js';
 import videoStreamingModule from "./modules/video-image-stream/index.js";
 import ecomModule from "./modules/ecom-aws-cloud/index.js";
+import chatMessageModule from "./modules/websocket-chat-app/index.js";
 import setupSwagger from "./config/swagger-doc.js";
 import setupSwaggerReplica from "./config/replica-swagger-doc.js";
 const app = express();
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 paymentGatewayModule.init(app);
 videoStreamingModule.init(app);
 ecomModule.init(app);
+chatMessageModule.init(app);
 
 
 // Route to get the API key
