@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { userService } from '../services/user.js';
 const router = Router();
 import generateToken from '../../../middleware/token.js';
+import UAParser from 'ua-parser-js';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -36,7 +37,18 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
      try {
+          const parser = new UAParser();
+          const userAgent = req.get('User-Agent') || "";
+          const device = parser.setUA(userAgent).getDevice();
+          const deviceInfo = device.vendor ? `${device.vendor} ${device.model}` : "Unknown Device";
           const { emailOrPhone, password } = req.body;
+
+          const sessions = {
+               ipAddress: req.ip,
+               device: deviceInfo,
+               location: req.body.location, // Pass location from the client or use a geo-location service
+               createdAt: new Date(),
+          }
 
           const isApproved = await userService.isUserApproved(emailOrPhone);
 
@@ -46,7 +58,7 @@ router.post('/login', async (req, res) => {
                     .json({ message: 'User not approved by admin' });
           }
 
-          const user = await userService.login(emailOrPhone, password);
+          const user = await userService.login(emailOrPhone, password, [sessions]);
 
           if (!user) {
                return res.status(401).json({ message: 'Login failed' });
@@ -62,6 +74,7 @@ router.post('/login', async (req, res) => {
                     userId: user._id,
                     role: user.role,
                }),
+               sessions
           };
 
           return res.status(200).json(response);

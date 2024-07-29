@@ -23,6 +23,7 @@
     "stripe": "^16.5.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
+    "ua-parser-js": "^1.0.38",
     "winston": "^3.13.1"
   }
 }

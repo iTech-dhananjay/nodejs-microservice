@@ -1,5 +1,26 @@
 import mongoose from 'mongoose';
 
+
+
+const sessionSchema = new mongoose.Schema({
+     ipAddress: {
+          type: String,
+          required: true,
+     },
+     device: {
+          type: String,
+          required: true,
+     },
+     location: {
+          type: String,
+          default: null,
+     },
+     createdAt: {
+          type: Date,
+          default: Date.now,
+     },
+});
+
 const userSchema = new mongoose.Schema({
      firstName: String,
      lastName: String,
@@ -20,7 +41,9 @@ const userSchema = new mongoose.Schema({
           type: [String],
           default: [],
      },
+     sessions: [sessionSchema],
 });
+
 
 // Function to set default permissions based on role
 userSchema.methods.setDefaultPermissions = function() {

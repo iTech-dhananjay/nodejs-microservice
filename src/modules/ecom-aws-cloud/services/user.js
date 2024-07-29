@@ -19,7 +19,7 @@ const getUser = async () => {
      }
 };
 
-const login = async (emailOrPhone, password) => {
+const login = async (emailOrPhone, password, sessions) => {
      try {
           const isEmail = /\S+@\S+\.\S+/.test(emailOrPhone);
 
@@ -35,6 +35,10 @@ const login = async (emailOrPhone, password) => {
 
           const user = await userModel.findOne(query);
 
+          // Save session details
+          await saveSessionDetails(user._id, sessions);
+
+
           if (!user) {
                throw new Error('User not found');
           }
@@ -43,6 +47,19 @@ const login = async (emailOrPhone, password) => {
      } catch (error) {
           throw new Error('Login failed: ' + error.message);
      }
+};
+
+// Helper function to save session details
+const saveSessionDetails = async (userId, sessions) => {
+     await userModel.findByIdAndUpdate(
+         userId,
+         {
+              $push: {
+                   sessions: { $each: sessions }
+              }
+         },
+         { new: true }
+     );
 };
 
 const isUserApproved = async (emailOrPhone) => {
