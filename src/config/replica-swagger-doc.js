@@ -80,6 +80,28 @@ const userSchemas = {
     },
 };
 
+
+const authSchemas = {
+    Authorization: {
+        type: 'object',
+        required: ['emailOrPhone', 'password'],
+        properties: {
+            emailOrPhone: {
+                type: 'string',
+                description: 'The email or phone of the user',
+            },
+            password: {
+                type: 'string',
+                description: 'The password of the user',
+            },
+        },
+        example: {
+            emailOrPhone: 'dhananjay1@gmail.com',
+            password: '123',
+        },
+    },
+};
+
 const warehouseSchemas = {
     Warehouse: {
         type: 'object',
@@ -252,6 +274,59 @@ const userPaths = {
     },
 };
 
+const authPaths = {
+    '/ecom/user/login': {
+        post: {
+            tags: ['User'],
+            summary: 'User login',
+            requestBody: {
+                required: true,
+                content: {
+                    'application/json': {
+                        schema: {
+                            $ref: '#/components/schemas/Authorization',
+                        },
+                    },
+                },
+            },
+            responses: {
+                200: {
+                    description: 'Login successful',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                $ref: '#/components/schemas/User',
+                            },
+                        },
+                    },
+                },
+                401: {
+                    description: 'Unauthorized. Invalid credentials.',
+                },
+            },
+        },
+    },
+    '/ecom/user/logout': {
+        post: {
+            tags: ['User'],
+            summary: 'User logout',
+            security: [
+                {
+                    bearerAuth: [],
+                },
+            ],
+            responses: {
+                200: {
+                    description: 'Logout successful',
+                },
+                401: {
+                    description: 'Unauthorized. Token missing or invalid.',
+                },
+            },
+        },
+    },
+};
+
 const warehousePaths = {
     '/ecom/warehouse/list': {
         get: {
@@ -337,19 +412,22 @@ const options = {
                 },
             },
             schemas: {
+                ...authSchemas,
+                ...userSchemas,
                 ...productSchemas,
                 ...orderSchemas,
-                ...userSchemas,
+                ...paymentSchemas,
                 ...warehouseSchemas,
-                ...paymentSchemas
+
             },
         },
         paths: {
+            ...authPaths,
+            ...userPaths,
             ...productPaths,
             ...orderPaths,
-            ...userPaths,
-            ...warehousePaths,
             ...paymentPaths,
+            ...warehousePaths,
         },
     },
     apis: [],
