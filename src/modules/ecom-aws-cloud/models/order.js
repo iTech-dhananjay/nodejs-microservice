@@ -7,6 +7,7 @@ const orderSchema = new mongoose.Schema({
      },
      productId: {
           type: mongoose.Schema.Types.ObjectId,
+          index: true,  // Adding an index for faster queries
           ref: 'Product',
      },
      status: {
