@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import http from 'http';
 import app from './app.js';
 import connectToDatabase from './config/database.js';
-import setupWebSocket from './modules/websocket-chat-app/websocket.js';
+import { chatMessageService } from './modules/websocket-chat-app/services/chatMessage.js';
 import { logServer } from './utils/logger.js';
 
 // Load environment variables
@@ -15,7 +15,7 @@ connectToDatabase();
 const server = http.createServer(app);
 
 // Setup WebSocket
-setupWebSocket(server);
+chatMessageService.setupWebSocket(server);
 
 // Start the server
 const PORT = process.env.PORT || 4009;
