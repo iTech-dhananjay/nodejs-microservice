@@ -277,7 +277,7 @@ const userPaths = {
 const authPaths = {
     '/ecom/user/login': {
         post: {
-            tags: ['User'],
+            tags: ['Auth'],
             summary: 'User login',
             requestBody: {
                 required: true,
@@ -308,7 +308,7 @@ const authPaths = {
     },
     '/ecom/user/logout': {
         post: {
-            tags: ['User'],
+            tags: ['Auth'],
             summary: 'User logout',
             security: [
                 {
