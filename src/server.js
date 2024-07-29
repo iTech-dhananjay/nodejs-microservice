@@ -6,6 +6,7 @@ import { chatMessageService } from './modules/websocket-chat-app/services/chatMe
 import { logServer } from './utils/logger.js';
 import { Server } from 'socket.io';
 import { setIoInstance } from '../src/modules/websocket-chat-app/router/chatMessage.js';
+import './config/cron.js'; // Add this line to initialize the cron job
 
 // Load environment variables
 dotenv.config();
