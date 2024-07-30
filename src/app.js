@@ -7,6 +7,7 @@ import chatMessageModule from "./modules/websocket-chat-app/index.js";
 import setupSwagger from "./config/swagger-doc.js";
 import setupSwaggerReplica from "./config/replica-swagger-doc.js";
 const app = express();
+import path from "path";
 
 // Use Swagger UI
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -20,6 +21,7 @@ setupSwaggerReplica(app);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/qrcodes', express.static(path.resolve('public/qrcodes')));
 
 // Initialize the modules with the app instance
 paymentGatewayModule.init(app);

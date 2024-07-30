@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { productService } from '../services/product.js';
 import isLoggedInAndAdmin from '../../../middleware/checkAdminRole.js';
+import { generateQRCode } from '../../../utils/qrCodeGenerator.js'
 
 const router = Router();
 
@@ -38,26 +39,23 @@ router.get('/list', async (req, res) => {
      }
 });
 
-router.get('/:id', isLoggedInAndAdmin, async (req, res) => {
+// Route to get product details along with QR code
+router.get('/:id', async (req, res) => {
      try {
-          const { id } = req.params;
-          const product = await productService.getProductById(id);
+          const productId = req.params.id;
+           const product = await productService.getProductById(productId);
 
           if (!product) {
-               return res.status(404).json({
-                    message: 'Product not found',
-               });
+               return res.status(404).json({ message: 'Product not found' });
           }
 
-          return res.status(200).json({
-               message: 'Product retrieved successfully',
-               product,
-          });
-     } catch (error) {
-          console.error('Error retrieving product:', error.message);
-          res.status(500).json({
-               message: 'An error occurred while retrieving the product',
-          });
+          const qrCodeFilename = `${productId}.png`;
+          await generateQRCode(JSON.stringify(product.name), qrCodeFilename);
+
+          res.json({ product, qrCode: `/qrcodes/${qrCodeFilename}` });
+     } catch (err) {
+          console.error('Error fetching product details:', err);
+          res.status(500).json({ message: 'Internal server error' });
      }
 });
 
