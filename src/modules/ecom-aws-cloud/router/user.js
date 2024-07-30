@@ -3,6 +3,7 @@ import { userService } from '../services/user.js';
 const router = Router();
 import generateToken from '../../../middleware/token.js';
 import UAParser from 'ua-parser-js';
+import rateLimiter from "../../../config/rateLimiter.js";
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -84,7 +85,7 @@ router.post('/login', async (req, res) => {
      }
 });
 
-router.get('/list', async (req, res) => {
+router.get('/list', rateLimiter, async (req, res) => {
      try {
           const users = await userService.getUser();
 
