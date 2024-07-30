@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from "path";
 import paymentGatewayModule from './modules/payment-gateway/index.js';
 import videoStreamingModule from "./modules/video-image-stream/index.js";
 import ecomModule from "./modules/ecom-aws-cloud/index.js";
@@ -7,7 +8,8 @@ import chatMessageModule from "./modules/websocket-chat-app/index.js";
 import setupSwagger from "./config/swagger-doc.js";
 import setupSwaggerReplica from "./config/replica-swagger-doc.js";
 const app = express();
-import path from "path";
+
+
 
 // Use Swagger UI
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
