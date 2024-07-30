@@ -1,8 +1,8 @@
-import productModle from '../models/product.js';
+import productModel from '../models/product.js';
 
 const createProduct = async (productData) => {
      try {
-          const newProduct = await productModle(productData);
+          const newProduct = await productModel(productData);
           return await newProduct.save();
      } catch (error) {
           throw new Error(error.message);
@@ -11,11 +11,23 @@ const createProduct = async (productData) => {
 
 const getProduct = async () => {
      try {
-          const products = await productModle.find();
+          const products = await productModel.find();
 
           return products;
      } catch (error) {
           throw new Error(error.message);
+     }
+};
+
+const getProductById = async (id) => {
+     try {
+          const product = await productModel.findById(id);
+          if (!product) {
+               throw new Error('Product not found');
+          }
+          return product;
+     } catch (error) {
+          throw new Error('Error retrieving product: ' + error.message);
      }
 };
 
@@ -25,7 +37,7 @@ const getLowStockProducts = async () => {
           const lowStockThreshold = 16;
 
           // Find products with available stock less than the threshold
-          const lowStockProducts = await productModle.find({
+          const lowStockProducts = await productModel.find({
                availableStock: { $lt: lowStockThreshold },
           });
 
@@ -38,5 +50,6 @@ const getLowStockProducts = async () => {
 export const productService = {
      createProduct,
      getProduct,
+     getProductById,
      getLowStockProducts,
 };

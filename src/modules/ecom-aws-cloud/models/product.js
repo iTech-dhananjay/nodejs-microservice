@@ -6,6 +6,6 @@ const productSchema = new mongoose.Schema({
      availableStock: Number, // Represents the available stock quantity of the product
 });
 
-const productModle = mongoose.model('products', productSchema);
+const productModel = mongoose.model('products', productSchema);
 
-export default productModle;
+export default productModel;

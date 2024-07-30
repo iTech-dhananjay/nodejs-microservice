@@ -38,6 +38,29 @@ router.get('/list', async (req, res) => {
      }
 });
 
+router.get('/:id', isLoggedInAndAdmin, async (req, res) => {
+     try {
+          const { id } = req.params;
+          const product = await productService.getProductById(id);
+
+          if (!product) {
+               return res.status(404).json({
+                    message: 'Product not found',
+               });
+          }
+
+          return res.status(200).json({
+               message: 'Product retrieved successfully',
+               product,
+          });
+     } catch (error) {
+          console.error('Error retrieving product:', error.message);
+          res.status(500).json({
+               message: 'An error occurred while retrieving the product',
+          });
+     }
+});
+
 // Get products that are going to be out of stock
 router.get('/out-of-stock', isLoggedInAndAdmin, async (req, res) => {
      try {
