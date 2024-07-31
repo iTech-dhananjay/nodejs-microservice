@@ -51,22 +51,26 @@
 #      - kafka
 
 version: '3.8'
+
 services:
   zookeeper:
-    container_name: zookeper
+    container_name: zookeeper
     image: wurstmeister/zookeeper
     ports:
       - 2181:2181
+
   kafka:
     container_name: kafka
     image: wurstmeister/kafka
     ports:
       - 9092:9092
-    volumes:
-      - ./data/kafka:/var/run/docker.sock
     environment:
-      - KAFKA_ADVERTISED_HOST_NAME=kafka
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/kafka:/kafka
+
   mongo:
     container_name: ecom-mongo-service
     image: mongo
@@ -74,6 +78,7 @@ services:
       - 27017:27017
     volumes:
       - ./data/mongo:/data/db
+
   ecom-aws-cloud-server:
     container_name: ecom-aws-cloud
     build: .
@@ -82,7 +87,7 @@ services:
     volumes:
       - .:/usr/src/app
     environment:
-      - PORT=8080
+      - PORT=4009
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_TOPIC=topic1
     depends_on:
