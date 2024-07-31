@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import productModel from '../models/product.js';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -24,27 +23,7 @@ const insertProducts = async () => {
         console.log('All products added successfully');
     } catch (err) {
         console.error('Error inserting products', err);
-    } finally {
-        // Close the MongoDB connection
-        mongoose.connection.close();
     }
 };
 
-// Connect to MongoDB and insert products
-const run = async () => {
-    try {
-        await mongoose.connect('mongodb://localhost:27017/node-ecom-ms', {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        console.log('MongoDB is connected');
-
-        await insertProducts();
-    } catch (err) {
-        console.error('Error running script', err);
-    }
-};
-
-run();
-
-//node src/modules/ecom-aws-cloud/migrations/importProducts.js
+export default insertProducts;

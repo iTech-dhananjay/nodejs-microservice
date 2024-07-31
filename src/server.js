@@ -7,12 +7,18 @@ import { logServer } from './utils/logger.js';
 import { Server } from 'socket.io';
 import { setIoInstance } from '../src/modules/websocket-chat-app/router/chatMessage.js';
 import './config/cron.js'; // Add this line to initialize the cron job
+import insertProducts from '../src/modules/ecom-aws-cloud/migrations/importProducts.js';
+
 
 // Load environment variables
 dotenv.config();
 
+
 // Connect to MongoDB
 connectToDatabase();
+
+
+insertProducts()
 
 // Create an HTTP server
 const server = http.createServer(app);
