@@ -1,6 +1,7 @@
 import productModel from '../models/product.js';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { logWarn } from "../../../utils/logger.js";
 
 const filePath = path.resolve('./src/modules/ecom-aws-cloud/migrations/products.json');
 
@@ -12,9 +13,8 @@ const insertProducts = async () => {
 
         // Check if any product already exists
         const existingProducts = await productModel.find({});
-        console.log(existingProducts, 'existingProducts');
         if (existingProducts.length > 0) {
-            console.log('Products already exist in the database. No new products will be added.');
+            logWarn('Products already exist in the database. No new products will be added.');
             return;
         }
 

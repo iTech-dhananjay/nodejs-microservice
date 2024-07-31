@@ -7,12 +7,12 @@ import ecomModule from "./modules/ecom-aws-cloud/index.js";
 import chatMessageModule from "./modules/websocket-chat-app/index.js";
 import setupSwagger from "./config/swagger-doc.js";
 import setupSwaggerReplica from "./config/replica-swagger-doc.js";
+import insertProducts from '../src/modules/ecom-aws-cloud/migrations/importProducts.js';
 const app = express();
 
 
-
-// Use Swagger UI
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+//Migration product imports
+insertProducts()
 
 
 // Setup Swagger
@@ -30,6 +30,7 @@ paymentGatewayModule.init(app);
 videoStreamingModule.init(app);
 ecomModule.init(app);
 chatMessageModule.init(app);
+
 
 
 // Route to get the API key

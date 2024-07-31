@@ -7,8 +7,6 @@ import { logServer } from './utils/logger.js';
 import { Server } from 'socket.io';
 import { setIoInstance } from '../src/modules/websocket-chat-app/router/chatMessage.js';
 import './config/cron.js'; // Add this line to initialize the cron job
-import insertProducts from '../src/modules/ecom-aws-cloud/migrations/importProducts.js';
-
 
 // Load environment variables
 dotenv.config();
@@ -18,11 +16,8 @@ dotenv.config();
 connectToDatabase();
 
 
-insertProducts()
-
 // Create an HTTP server
 const server = http.createServer(app);
-
 // Setup WebSocket
 const io = new Server(server, {
     cors: {
@@ -30,8 +25,7 @@ const io = new Server(server, {
     },
 });
 
-// Pass the WebSocket instance to the service
-setIoInstance(io);
+setIoInstance(io); // Pass the WebSocket instance to the service
 
 // Start the server
 const PORT = process.env.PORT || 4009;
