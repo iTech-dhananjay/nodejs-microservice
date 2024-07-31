@@ -1,5 +1,27 @@
-import { KafkaClient } from 'kafka-node';
+import kafka from 'kafka-node';
 
-const kafkaHost = 'localhost:9092'; // Kafka broker address
+const client = new kafka.KafkaClient({ kafkaHost: process.env.KAFKA_HOST || 'localhost:9092' });
 
-export { kafkaHost, KafkaClient };
+const createTopic = (topicName) => {
+    client.createTopics(
+        [
+            {
+                topic: topicName,
+                partitions: 1,
+                replicationFactor: 1,
+            },
+        ],
+        (error, result) => {
+            if (error) {
+                console.error('Error creating topic:', error);
+            } else {
+                console.log('Topic created:', result);
+            }
+        }
+    );
+};
+
+createTopic('todo-topic'); // Create the topic
+
+export const kafkaHost = process.env.KAFKA_HOST || 'localhost:9092';
+export default client;
