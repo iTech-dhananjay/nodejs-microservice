@@ -7,6 +7,7 @@ import { logServer } from './utils/logger.js';
 import { Server } from 'socket.io';
 import { setIoInstance } from '../src/modules/websocket-chat-app/router/chatMessage.js';
 import './config/cron.js'; // Add this line to initialize the cron job
+import './kafka/consumer.js'; // Start Kafka consumer
 
 // Load environment variables
 dotenv.config();

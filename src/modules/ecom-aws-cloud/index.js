@@ -4,6 +4,7 @@ import productRouter from './router/product.js';
 import orderRouter from './router/order.js';
 import warehouseRouter from './router/warehouse.js';
 import stripeRouter from './router/stripe.js';
+import todoKafkaRouter from './router/todo-kafka.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
 // Create a router instance
@@ -15,6 +16,7 @@ router.use('/product', productRouter);
 router.use('/order', orderRouter);
 router.use('/warehouse', warehouseRouter)
 router.use('/stripe-payment', stripeRouter)
+router.use('/todo-kafka', todoKafkaRouter);
 
 // Export the module with an init method
 const EcomModule = {
