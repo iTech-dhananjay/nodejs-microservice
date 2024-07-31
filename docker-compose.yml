@@ -75,7 +75,7 @@ services:
     volumes:
       - ./data/mongo:/data/db
   ecom-aws-cloud-server:
-    container_name: app1
+    container_name: ecom-aws-cloud
     build: .
     ports:
       - 4009:4009
