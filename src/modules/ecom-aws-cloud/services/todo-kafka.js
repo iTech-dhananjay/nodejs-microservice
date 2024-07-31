@@ -1,7 +1,6 @@
 import Todo from '../models/todo-kafka.js';
 import { sendMessage } from '../../../kafka/producer.js';
 
-// Create a new todo
 const createTodo = async (title) => {
     const newTodo = new Todo({
         title
@@ -13,31 +12,31 @@ const createTodo = async (title) => {
     return newTodo;
 };
 
-// Get all todos
+
 const getTodos = async () => {
     return await Todo.find();
 };
 
-// Get todo by ID
+
 const getTodoById = async (id) => {
     return await Todo.findById(id);
 };
 
-// Update todo by ID
+
 const updateTodo = async (id, updateData) => {
     return await Todo.findByIdAndUpdate(id, updateData, { new: true });
 };
 
-// Delete todo by ID
+
 const deleteTodo = async (id) => {
     return await Todo.findByIdAndDelete(id);
 };
 
-export const todoKafkaService =
-    {
-        createTodo,
-        getTodos,
-        getTodoById,
-        updateTodo,
-        deleteTodo
-    };
+
+export const todoKafkaService = {
+    createTodo,
+    getTodos,
+    getTodoById,
+    updateTodo,
+    deleteTodo
+};
