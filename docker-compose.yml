@@ -1,20 +1,25 @@
 #version: '3.8'
+#
 #services:
 #  zookeeper:
-#    container_name: zookeper
-#    image: wurstmeister/zookeeper
+#    container_name: zookeeper
+#    image: zookeeper
 #    ports:
 #      - 2181:2181
+#
 #  kafka:
 #    container_name: kafka
 #    image: wurstmeister/kafka
 #    ports:
 #      - 9092:9092
-#    volumes:
-#      - ./data/kafka:/var/run/docker.sock
 #    environment:
-#      - KAFKA_ADVERTISED_HOST_NAME=kafka
-#      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+#      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - ./data/kafka:/kafka
+#
 #  mongo:
 #    container_name: ecom-mongo-service
 #    image: mongo
@@ -22,31 +27,19 @@
 #      - 27017:27017
 #    volumes:
 #      - ./data/mongo:/data/db
-#  postgres:
-#    container_name: postgres
-#    image: postgres
-#    ports:
-#      - 5432:5432
-#    volumes:
-#      - ./data/postgres:/var/lib/postgresql/data
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#      - POSTGRES_DB=postgres
+#
 #  ecom-aws-cloud-server:
-#    container_name: app1
+#    container_name: ecom-aws-cloud
 #    build: .
 #    ports:
 #      - 4009:4009
 #    volumes:
 #      - .:/usr/src/app
 #    environment:
-#      - PORT=8080
-#      - POSTGRES_URL=postgres://postgres:postgres@localhost:5432/postgres
-#      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-#      - KAFKA_TOPIC=topic1
+#      - PORT=4009
+#      - KAFKA_HOST=kafka:9092
+#      - KAFKA_TOPIC=todo-topic
 #    depends_on:
-#      - postgres
 #      - mongo
 #      - kafka
 
@@ -92,6 +85,7 @@ services:
       - PORT=4009
       - KAFKA_HOST=kafka:9092
       - KAFKA_TOPIC=todo-topic
+      - MONGODB_URI=mongodb://ecom-mongo-service:27017/node-ecom-ms
     depends_on:
       - mongo
       - kafka
