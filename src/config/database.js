@@ -10,7 +10,8 @@ const connectToDatabase = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    logMongoDB('MongoDB is connected'); // Custom logger for MongoDB
+    //logMongoDB('MongoDB is connected'); // Custom logger for MongoDB
+    logMongoDB(`MongoDB is connected: ${process.env.MONGODB_URI}`);
   } catch (error) {
     logError(`MongoDB connection error: ${error.message}`); // Use error logger
   }

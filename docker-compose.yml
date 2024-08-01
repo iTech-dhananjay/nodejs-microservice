@@ -85,7 +85,7 @@ services:
       - PORT=4009
       - KAFKA_HOST=kafka:9092
       - KAFKA_TOPIC=todo-topic
-      - MONGODB_URI=mongodb://ecom-mongo-service:27017/node-ecom-ms
+      - MONGODB_URI=mongodb://host.docker.internal:27017/node-ecom-ms
     depends_on:
       - mongo
       - kafka
