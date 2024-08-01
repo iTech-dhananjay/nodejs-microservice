@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 
-
-
 const sessionSchema = new mongoose.Schema({
      ipAddress: {
           type: String,
@@ -24,9 +22,16 @@ const sessionSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
      firstName: String,
      lastName: String,
-     email: String,
+     email: {
+          type: String,
+          unique: true,
+          required: true,
+     },
      phoneNumber: String,
-     password: String,
+     password: {
+          type: String,
+          required: true,
+     },
      role: {
           type: String,
           enum: ['admin', 'user'],
@@ -41,9 +46,40 @@ const userSchema = new mongoose.Schema({
           type: [String],
           default: [],
      },
+     addressIds: [{
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Address',
+     }],
+     orderIds: [{
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Order',
+     }],
+     wishlistIds: [{
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Wishlist',
+     }],
+     reviewIds: [{
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Review',
+     }],
+     paymentInfoIds: [{
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Payment',
+     }],
+     profilePicture: {
+          type: String,
+          default: null,
+     },
+     createdAt: {
+          type: Date,
+          default: Date.now,
+     },
+     updatedAt: {
+          type: Date,
+          default: Date.now,
+     },
      sessions: [sessionSchema],
 });
-
 
 // Function to set default permissions based on role
 userSchema.methods.setDefaultPermissions = function() {
@@ -59,6 +95,12 @@ userSchema.pre('save', function(next) {
      if (this.isNew) {
           this.setDefaultPermissions();
      }
+     next();
+});
+
+// Pre-save middleware to update the updatedAt field
+userSchema.pre('save', function(next) {
+     this.updatedAt = Date.now();
      next();
 });
 

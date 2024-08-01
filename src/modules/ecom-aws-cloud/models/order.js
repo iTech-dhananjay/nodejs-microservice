@@ -1,19 +1,26 @@
 import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema({
-     userId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
+     productId: mongoose.Schema.Types.ObjectId,
+     productName: String,
+     quantity: {
+          type: Number,
+          required: true,
      },
-     productId: {
-          type: mongoose.Schema.Types.ObjectId,
-          index: true,  // Adding an index for faster queries
-          ref: 'Product',
+     price: {
+          type: Number,
+          required: true,
      },
      status: {
           type: String,
-          enum: ['Pending', 'Accept', 'Reject', 'Dispatch'],
+          enum: ['pending', 'shipped', 'delivered', 'cancelled'],
+          default: 'pending',
      },
+     orderDate: {
+          type: Date,
+          default: Date.now,
+     },
+     deliveryDate: Date,
 });
 
 const orderModel = mongoose.model('orders', orderSchema);
