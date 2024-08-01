@@ -4,7 +4,7 @@ import { kafkaHost } from '../config/kafka.js';
 const client = new kafka.KafkaClient({ kafkaHost });
 const consumer = new kafka.Consumer(
     client,
-    [{ topic: 'todo-topic', partition: 0 }],
+    [{ topic: process.env.KAFKA_TOPIC, partition: 0 }],
     { autoCommit: true }
 );
 

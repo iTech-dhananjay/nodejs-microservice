@@ -1,6 +1,7 @@
 import kafka from 'kafka-node';
 
-const client = new kafka.KafkaClient({ kafkaHost: process.env.KAFKA_HOST || 'localhost:9092' });
+const kafkaHost = process.env.KAFKA_HOST || 'localhost:9092';
+const client = new kafka.KafkaClient({ kafkaHost });
 
 const createTopic = (topicName) => {
     client.createTopics(
@@ -21,7 +22,7 @@ const createTopic = (topicName) => {
     );
 };
 
-createTopic('todo-topic'); // Create the topic
+createTopic(process.env.KAFKA_TOPIC); // Create the topic
 
-export const kafkaHost = process.env.KAFKA_HOST || 'localhost:9092';
 export default client;
+export { kafkaHost };
