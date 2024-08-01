@@ -1,19 +1,25 @@
 import kafka from 'kafka-node';
-import { kafkaHost } from '../config/kafka.js';
+import { kafkaHost, ensureTopicExists } from '../config/kafka.js';
 
-const client = new kafka.KafkaClient({ kafkaHost });
-const consumer = new kafka.Consumer(
-    client,
-    [{ topic: process.env.KAFKA_TOPIC, partition: 0 }],
-    { autoCommit: true }
-);
+const initConsumer = async () => {
+    await ensureTopicExists(process.env.KAFKA_TOPIC);
 
-consumer.on('message', (message) => {
-    console.log('Kafka Consumer message:', message.value);
-});
+    const client = new kafka.KafkaClient({ kafkaHost });
+    const consumer = new kafka.Consumer(
+        client,
+        [{ topic: process.env.KAFKA_TOPIC, partition: 0 }],
+        { autoCommit: true }
+    );
 
-consumer.on('error', (err) => {
-    console.error('Kafka Consumer error:', err);
-});
+    consumer.on('message', (message) => {
+        console.log('Kafka Consumer message:', message.value);
+    });
 
-export default consumer;
+    consumer.on('error', (err) => {
+        console.error('Kafka Consumer error:', err);
+    });
+
+    return consumer;
+};
+
+export default initConsumer;

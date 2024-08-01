@@ -27,17 +27,15 @@ const createTopic = (topicName) => {
 };
 
 const ensureTopicExists = async (topicName) => {
-    const topicsToCreate = [{ topic: topicName, partitions: 1, replicationFactor: 1 }];
     const admin = new kafka.Admin(client);
-    admin.listTopics((err, res) => {
+    admin.listTopics(async (err, res) => {
         if (err) {
             console.error('Error listing topics:', err);
         } else {
             const topics = Object.keys(res[1].metadata);
             if (!topics.includes(topicName)) {
-                createTopic(topicName).then(() => {
-                    console.log(`Topic ${topicName} is ready`);
-                });
+                await createTopic(topicName);
+                console.log(`Topic ${topicName} is ready`);
             } else {
                 console.log(`Topic ${topicName} already exists`);
             }
@@ -48,4 +46,4 @@ const ensureTopicExists = async (topicName) => {
 ensureTopicExists(process.env.KAFKA_TOPIC);
 
 export default client;
-export { kafkaHost };
+export { kafkaHost, ensureTopicExists };
