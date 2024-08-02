@@ -15,6 +15,8 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: 'Title is required' });
         }
         await sendMessage(process.env.KAFKA_TOPIC, title);
+
+        await todoKafkaService.createTodo(title)
         res.status(200).json({ success: true, message: 'Message sent to Kafka' });
     } catch (err) {
         res.status(500).json({ error: err.message });
