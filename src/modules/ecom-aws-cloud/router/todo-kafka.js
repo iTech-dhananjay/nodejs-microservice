@@ -1,13 +1,21 @@
 import express from 'express';
+import { sendMessage } from '../../../kafka/producer.js';
 import { todoKafkaService } from '../services/todo-kafka.js';
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 const router = express.Router();
 
 // Create a new todo
 router.post('/', async (req, res) => {
     try {
-        const newTodo = await todoKafkaService.createTodo(req.body.title);
-        res.status(201).json(newTodo);
+        const { title  } = req.body;
+        if (!title) {
+            return res.status(400).json({ error: 'Title is required' });
+        }
+        await sendMessage(process.env.KAFKA_TOPIC, title);
+        res.status(200).json({ success: true, message: 'Message sent to Kafka' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

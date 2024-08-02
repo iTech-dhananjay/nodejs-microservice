@@ -28,19 +28,23 @@ const createTopic = (topicName) => {
 
 const ensureTopicExists = async (topicName) => {
     const admin = new kafka.Admin(client);
-    admin.listTopics(async (err, res) => {
-        if (err) {
-            console.error('Error listing topics:', err);
+    try {
+        const topics = await new Promise((resolve, reject) => {
+            admin.listTopics((err, res) => {
+                if (err) return reject(err);
+                resolve(Object.keys(res[1].metadata));
+            });
+        });
+
+        if (!topics.includes(topicName)) {
+            await createTopic(topicName);
+            console.log(`Topic ${topicName} is ready`);
         } else {
-            const topics = Object.keys(res[1].metadata);
-            if (!topics.includes(topicName)) {
-                await createTopic(topicName);
-                console.log(`Topic ${topicName} is ready`);
-            } else {
-                console.log(`Topic ${topicName} already exists`);
-            }
+            console.log(`Topic ${topicName} already exists`);
         }
-    });
+    } catch (error) {
+        console.error('Error in ensureTopicExists:', error);
+    }
 };
 
 ensureTopicExists(process.env.KAFKA_TOPIC);

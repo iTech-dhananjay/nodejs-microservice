@@ -17,6 +17,14 @@ dotenv.config();
 // Connect to MongoDB
 connectToDatabase();
 
+// Initialize Kafka Consumer
+initConsumer().then(() => {
+    console.log('Kafka Consumer setup complete');
+}).catch(error => {
+    console.error('Failed to set up Kafka Consumer:', error);
+});
+
+
 
 // Create an HTTP server
 const server = http.createServer(app);

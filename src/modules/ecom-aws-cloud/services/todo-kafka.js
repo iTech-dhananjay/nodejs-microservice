@@ -1,11 +1,10 @@
 import Todo from '../models/todo-kafka.js';
-import { sendMessage } from '../../../kafka/producer.js';
 
 const createTodo = async (title) => {
     const newTodo = new Todo({
         title
     });
-    await sendMessage('todo-topic', `Created Todo: ${title}`);
+    // await sendMessage('todo-topic', `Created Todo: ${title}`);
     await newTodo.save();
     return newTodo;
 };
