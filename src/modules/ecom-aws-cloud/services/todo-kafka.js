@@ -5,10 +5,8 @@ const createTodo = async (title) => {
     const newTodo = new Todo({
         title
     });
-    await newTodo.save();
-
     await sendMessage('todo-topic', `Created Todo: ${title}`);
-
+    await newTodo.save();
     return newTodo;
 };
 
