@@ -5,21 +5,26 @@ import generateToken from '../../../middleware/token.js';
 import UAParser from 'ua-parser-js';
 import { generalLimiter , loginLimiter, adminLimiter } from "../../../config/rateLimiter.js";
 import dotenv from 'dotenv';
+import { uploadImageToS3 } from "../../../aws/s3.js";
+import fs from 'fs';
+import { upload } from '../../../config/fileUpload.js'
 dotenv.config();
 
-router.post('/register', async (req, res) => {
+router.post('/register', upload.single('profileImage'), async (req, res) => {
      try {
-          const { firstName, lastName, email, password, role, isApproved } =
-               req.body;
+          const { firstName, lastName, email, password, role, isApproved } = req.body;
 
-          const data = {
-               firstName,
-               lastName,
-               email,
-               password,
-               role,
-               isApproved,
-          };
+          // Handle the profile image upload
+          let profilePictureUrl = null;
+          if (req.file) {
+               // Upload image to S3
+               const filePath = req.file.path;
+               const fileBuffer = fs.readFileSync(filePath);
+               const fileType = req.file.mimetype.split('/')[1];
+               profilePictureUrl = await uploadImageToS3(fileBuffer, fileType);
+          }
+
+          const data = { firstName, lastName, email, password, role, isApproved, profilePicture: profilePictureUrl };
 
           const user = await userService.createUser(data);
 

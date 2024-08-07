@@ -1,9 +1,17 @@
 import userModel from '../models/user.js';
+import { sendRegistrationEmail } from "../../../aws/ses.js";
 
 const createUser = async (userData) => {
      try {
           const newUser = new userModel(userData);
           const createdUser = await newUser.save();
+
+          // Send a registration email
+          await sendRegistrationEmail({
+               to: createdUser.email,
+               username: createdUser.firstName,
+          });
+
           return createdUser;
      } catch (error) {
           throw new Error('Error creating user: ' + error.message);
