@@ -66,6 +66,16 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/kafka:/kafka
 
+  kafdrop:
+    container_name: kafdrop
+    image: obsidiandynamics/kafdrop
+    ports:
+      - 9000:9000
+    environment:
+      KAFKA_BROKERCONNECT: kafka:9092
+    depends_on:
+      - kafka
+
   mongo:
     container_name: ecom-mongo-service
     image: mongo
