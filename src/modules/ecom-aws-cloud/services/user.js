@@ -7,10 +7,10 @@ const createUser = async (userData) => {
           const createdUser = await newUser.save();
 
           // Send a registration email
-          await sendRegistrationEmail({
-               to: createdUser.email,
-               username: createdUser.firstName,
-          });
+          // await sendRegistrationEmail({
+          //      to: createdUser.email,
+          //      username: createdUser.firstName,
+          // });
 
           return createdUser;
      } catch (error) {

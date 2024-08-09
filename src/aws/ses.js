@@ -136,7 +136,7 @@ const sendRegistrationEmail = async ({ to, username }) => {
                 Data: "Welcome to Our Service!",
             },
         },
-        Source: "your-email@example.com", // Replace with your verified SES email
+        Source: "officialdhananjay76@gmai.com", // Replace with your verified SES email
     };
 
     try {

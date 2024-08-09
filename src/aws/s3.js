@@ -3,11 +3,17 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { v4: uuidv4 } = require('uuid');
 
-const s3 = new AWS.S3();
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION,
+    BUCKET: process.env.AWS_BUCKET,
+});
+
 
 export const uploadImageToS3 = async (fileBuffer, fileType) => {
     const params = {
-        Bucket: 'your-s3-bucket-name', // Replace with your S3 bucket name
+        Bucket: process.env.AWS_BUCKET, // Replace with your S3 bucket name
         Key: `${uuidv4()}.${fileType}`,
         Body: fileBuffer,
         ContentType: `image/${fileType}`,
